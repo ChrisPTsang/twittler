@@ -3,22 +3,74 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <style>
+      h1 {
+        font: 50px 'Trebuchet MS', Arial, sans-serif;
+        font-weight: bold;
+        text-shadow: 2px 2px #d8d9da;
+        color: #4d93f5;
+        position: fixed;
+        top: 20px;
+        left: 100px;
+      }
+
+      .tweet {
+        font: 14px Helvetica, Arial, sans-serif;
+        border: 1px outset #dcdde0;
+        border-radius: 8px;
+        background-color: #e7ecf9;
+        margin: 5px 400px;
+        padding: 10px;
+      }
+
+      .user {
+        font-weight: bold;
+
+      }
+
+      .date {
+        font-size: 10px;
+        color: #606366;
+      }
+
+      p {
+        margin-top: 50px;
+      }
+
+    </style>
   </head>
   <body>
+    <h1>twittler</h1>
+    <p class="timeline"></p>
+
     <script>
-
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        var timeline = $('.timeline');
+        //$body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+        var oldIndex = 0;
+
+        var displayTweets = function(){
+          var index = streams.home.length - 1;
+          var lastIndex = index;
+
+          while(index > oldIndex){
+            var tweet = streams.home[index];
+            var $tweet = $('<div class="tweet"></div>');
+            $tweet.html('@<span class="user">' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+            $tweet.appendTo(timeline);
+            index -= 1;
+          }
+          oldIndex = lastIndex;
         }
+
+        displayTweets();
+
+        setInterval(displayTweets, 5000);
+
+        $('.user').click(function(){
+          $('.tweet').remove();
+        });
 
       });
 
