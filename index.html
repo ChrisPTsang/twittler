@@ -72,11 +72,11 @@
       }
 
       ::-webkit-scrollbar {
-        width: 7px;
+        width: 5px;
       }
  
       ::-webkit-scrollbar-thumb {
-        border-radius: 5px;
+        border-radius: 20px;
         background: rgba(0,0,0,0.1);
       }
 
@@ -92,7 +92,8 @@
     <script>
       $(document).ready(function(){
 
-        var user = prompt("Please enter your name", "Guest");
+        //prompt for username to display on timeline 
+        var user = prompt("Please enter your username", "Guest");
         if (user != null) {
           $("#user").text("@" + user + "'s");
         }
@@ -109,21 +110,43 @@
           while(index > oldIndex){
             var tweet = streams.home[index];
             var $tweet = $('<div class="tweet"></div>');
-            $tweet.html('@<span class="user">' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+            $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
             $tweet.appendTo(timeline);
             index -= 1;
           }
           oldIndex = lastIndex;
         }
 
-        displayTweets();
+        displayTweets(); //display initial set of generated tweets
+        var refresh = setInterval(displayTweets, 5000); //display new tweets every 5 seconds
 
-        setInterval(displayTweets, 5000);
-
-        $('.user').click(function(){
-          $('.tweet').remove();
+        $('.user').hover(function(){
+          $(this).css("color", "#4d93f5");
+          $(this).css("cursor", "pointer");
+        }, function(){
+          $(this).css("color", "black");
+          $(this).css('cursor','auto');
         });
 
+        $('.user').click(function(){
+          var username = $(this).text();
+          username = username.slice(1,-1);
+          var allUsers = streams.users
+          var index = allUsers[username].length - 1;
+          var lastIndex = index;
+          clearInterval(refresh);
+          $('.tweet').remove();
+
+          oldIndex = 0;
+
+          while(index > oldIndex){
+            var tweet = allUsers[username][index];
+            var $tweet = $('<div class="tweet"></div>');
+            $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+            $tweet.appendTo(timeline);
+            index -= 1;
+          }
+        });
       });
 
     </script>
