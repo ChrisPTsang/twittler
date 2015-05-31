@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Poiret+One|Lobster|Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
     <style>
-
-      #logo {
+    #logo {
         font: 4em 'Lobster', 'Poiret One', cursive, Arial, sans-serif;
         font-weight: bold;
         text-shadow: 2px 2px #d8d9da;
@@ -14,9 +14,9 @@
         position: fixed;
         top: 50px;
         left: 150px;
-      }
-
-      #user-timeline {
+    }
+    
+    #user-timeline {
         font: 1em 'Open Sans', sans-serif;
         font-weight: bold;
         position: fixed;
@@ -27,8 +27,9 @@
         min-width: 400px;
         //background: linear-gradient(to bottom, #d1eaff , #fbfdfd);
         padding: 5px;
-      }
-      #container {
+    }
+    
+    #container {
         overflow: hidden;
         position: fixed;
         right: 20px;
@@ -36,66 +37,65 @@
         top: 50px;
         bottom: 10%;
         padding: 5px;
-      }
-
-      .tweet {
+    }
+    
+    .tweet {
         font: .9em 'Open Sans', Helvetica, Arial, sans-serif;
         border: 1px outset #dcdde0;
         border-radius: 8px;
         background-color: #ebf6ff;
         padding: 10px;
         margin: 15px;
-      }
-
-      .user {
+    }
+    
+    .user {
         font-weight: bold;
-
-      }
-
-      .date {
+    }
+    
+    .date {
         font-size: 0.5em;
         color: #606366;
-      }
-
-      #timeline {
+    }
+    
+    #timeline {
         position: absolute;
         overflow-y: scroll;
         margin: 0 400px;
-        top:55px; 
+        top: 55px;
         left: 0;
         right: 0;
         bottom: 0;
         height: 90%;
-        border: 1px solid #e9eaec; 
+        border: 1px solid #e9eaec;
         border-radius: 10px;
         min-width: 400px;
-      }
-
-      ::-webkit-scrollbar {
+    }
+    
+    ::-webkit-scrollbar {
         width: 5px;
-      }
- 
-      ::-webkit-scrollbar-thumb {
+    }
+    
+    ::-webkit-scrollbar-thumb {
         border-radius: 20px;
-        background: rgba(0,0,0,0.1);
-      }
-
+        background: rgba(0, 0, 0, 0.1);
+    }
     </style>
-  </head>
-  <body>
-    <div id = "logo">twittler</div>
-    <div id = "user-timeline"><span id="user">Guest's</span> Timeline</div>
-    <div id="container"> 
-      <div id="timeline"></div>
-    </div>
+</head>
 
+<body>
+    <input type="text" value="Please Enter Username" autofocus>
+    <div id="logo">twittler</div>
+    <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
+    <div id="container">
+        <div id="timeline"></div>
+    </div>
     <script>
-      $(document).ready(function(){
+    $(document).ready(function() {
 
         //prompt for username to display on timeline 
         var user = prompt("Please enter your username", "Guest");
         if (user != null) {
-          $("#user").text("@" + user + "'s");
+            $("#user").text("@" + user + "'s");
         }
 
         var timeline = $('#timeline');
@@ -103,52 +103,61 @@
 
         var oldIndex = 0;
 
-        var displayTweets = function(){
-          var index = streams.home.length - 1;
-          var lastIndex = index;
-
-          while(index > oldIndex){
-            var tweet = streams.home[index];
-            var $tweet = $('<div class="tweet"></div>');
-            $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
-            $tweet.appendTo(timeline);
-            index -= 1;
-          }
-          oldIndex = lastIndex;
-        }
-
         displayTweets(); //display initial set of generated tweets
         var refresh = setInterval(displayTweets, 5000); //display new tweets every 5 seconds
 
-        $('.user').hover(function(){
-          $(this).css("color", "#4d93f5");
-          $(this).css("cursor", "pointer");
-        }, function(){
-          $(this).css("color", "black");
-          $(this).css('cursor','auto');
+        hover(".user", "#4d93f5", "black");
+        hover("#user", "#2efa72", "#4d93f5");
+
+        function displayTweets() {
+            var index = streams.home.length - 1;
+            var lastIndex = index;
+
+            while (index > oldIndex) {
+                var tweet = streams.home[index];
+                var $tweet = $('<div class="tweet"></div>');
+                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+                $tweet.appendTo(timeline);
+                index -= 1;
+            }
+            oldIndex = lastIndex;
+        }
+
+        function hover(selection, color1, color2) {
+            if (color2 === undefined) {
+                color2 = "black";
+            }
+
+            $(selection).hover(function() {
+                $(this).css("color", color1);
+                $(this).css("cursor", "pointer");
+            }, function() {
+                $(this).css("color", color2);
+                $(this).css('cursor', 'auto');
+            });
+        }
+
+        $('.user').click(function() {
+            var username = $(this).text();
+            username = username.slice(1, -1);
+            var allUsers = streams.users
+            var index = allUsers[username].length - 1;
+            var lastIndex = index;
+            clearInterval(refresh);
+            $('.tweet').remove();
+
+            oldIndex = 0;
+
+            while (index > oldIndex) {
+                var tweet = allUsers[username][index];
+                var $tweet = $('<div class="tweet"></div>');
+                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+                $tweet.appendTo(timeline);
+                index -= 1;
+            }
         });
-
-        $('.user').click(function(){
-          var username = $(this).text();
-          username = username.slice(1,-1);
-          var allUsers = streams.users
-          var index = allUsers[username].length - 1;
-          var lastIndex = index;
-          clearInterval(refresh);
-          $('.tweet').remove();
-
-          oldIndex = 0;
-
-          while(index > oldIndex){
-            var tweet = allUsers[username][index];
-            var $tweet = $('<div class="tweet"></div>');
-            $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
-            $tweet.appendTo(timeline);
-            index -= 1;
-          }
-        });
-      });
-
+    });
     </script>
-  </body>
+</body>
+
 </html>
