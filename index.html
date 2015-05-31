@@ -3,24 +3,48 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Poiret+One|Lobster|Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
     <style>
-      h1 {
-        font: 50px 'Trebuchet MS', Arial, sans-serif;
+
+      #logo {
+        font: 4em 'Lobster', 'Poiret One', cursive, Arial, sans-serif;
         font-weight: bold;
         text-shadow: 2px 2px #d8d9da;
         color: #4d93f5;
         position: fixed;
-        top: 20px;
-        left: 100px;
+        top: 50px;
+        left: 150px;
+      }
+
+      #user-timeline {
+        font: 1em 'Open Sans', sans-serif;
+        font-weight: bold;
+        position: fixed;
+        color: #4d93f5;
+        top: 50px;
+        left: 420px;
+        right: 420px;
+        min-width: 400px;
+        //background: linear-gradient(to bottom, #d1eaff , #fbfdfd);
+        padding: 5px;
+      }
+      #container {
+        overflow: hidden;
+        position: fixed;
+        right: 20px;
+        left: 20px;
+        top: 50px;
+        bottom: 10%;
+        padding: 5px;
       }
 
       .tweet {
-        font: 14px Helvetica, Arial, sans-serif;
+        font: .9em 'Open Sans', Helvetica, Arial, sans-serif;
         border: 1px outset #dcdde0;
         border-radius: 8px;
-        background-color: #e7ecf9;
-        margin: 5px 400px;
+        background-color: #ebf6ff;
         padding: 10px;
+        margin: 15px;
       }
 
       .user {
@@ -29,23 +53,51 @@
       }
 
       .date {
-        font-size: 10px;
+        font-size: 0.5em;
         color: #606366;
       }
 
-      p {
-        margin-top: 50px;
+      #timeline {
+        position: absolute;
+        overflow-y: scroll;
+        margin: 0 400px;
+        top:55px; 
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 90%;
+        border: 1px solid #e9eaec; 
+        border-radius: 10px;
+        min-width: 400px;
+      }
+
+      ::-webkit-scrollbar {
+        width: 7px;
+      }
+ 
+      ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background: rgba(0,0,0,0.1);
       }
 
     </style>
   </head>
   <body>
-    <h1>twittler</h1>
-    <p class="timeline"></p>
+    <div id = "logo">twittler</div>
+    <div id = "user-timeline"><span id="user">Guest's</span> Timeline</div>
+    <div id="container"> 
+      <div id="timeline"></div>
+    </div>
 
     <script>
       $(document).ready(function(){
-        var timeline = $('.timeline');
+
+        var user = prompt("Please enter your name", "Guest");
+        if (user != null) {
+          $("#user").text("@" + user + "'s");
+        }
+
+        var timeline = $('#timeline');
         //$body.html('');
 
         var oldIndex = 0;
