@@ -83,7 +83,6 @@
 </head>
 
 <body>
-    <input type="text" value="Please Enter Username" autofocus>
     <div id="logo">twittler</div>
     <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
     <div id="container">
@@ -98,29 +97,49 @@
             $("#user").text("@" + user + "'s");
         }
 
+        //$("input").keyup(function() {
+        //  var value = $(this).val();
+        //  $("#user").text(value);
+        //}).keyup();
+
         var timeline = $('#timeline');
         //$body.html('');
 
-        var oldIndex = 0;
+        var currentIndex = 0;
 
-        displayTweets(); //display initial set of generated tweets
-        var refresh = setInterval(displayTweets, 5000); //display new tweets every 5 seconds
+        displayTweets("main"); //display initial set of generated tweets
+        var refresh = setInterval(function() {
+            displayTweets("main");
+        }, 5000); //display new tweets every 5 seconds
 
-        hover(".user", "#4d93f5", "black");
         hover("#user", "#2efa72", "#4d93f5");
+        
 
-        function displayTweets() {
-            var index = streams.home.length - 1;
+        function displayTweets(username) {
+            var index, stream, userStream;
+
+            if (username === "main") {
+                index = streams.home.length - 1;
+                stream = streams.home;
+            } else {
+                userStream = streams.users
+                index = userStream[username].length - 1;
+                stream = userStream[username];
+            }
+
             var lastIndex = index;
 
-            while (index > oldIndex) {
-                var tweet = streams.home[index];
+            while (index > currentIndex) {
+                var tweet = stream[index];
                 var $tweet = $('<div class="tweet"></div>');
                 $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
                 $tweet.appendTo(timeline);
                 index -= 1;
             }
-            oldIndex = lastIndex;
+            currentIndex = lastIndex;
+            hover(".user", "#4d93f5", "black");
+            userclick();
+            
         }
 
         function hover(selection, color1, color2) {
@@ -137,25 +156,20 @@
             });
         }
 
-        $('.user').click(function() {
-            var username = $(this).text();
-            username = username.slice(1, -1);
-            var allUsers = streams.users
-            var index = allUsers[username].length - 1;
-            var lastIndex = index;
-            clearInterval(refresh);
-            $('.tweet').remove();
+        function userclick() {
+            $('.user').click(function() {
+                var newUser = $(this).text();
+                newUser = newUser.slice(1, -1);
+                clearInterval(refresh);
+                $('.tweet').remove();
+                currentIndex = 0;
 
-            oldIndex = 0;
-
-            while (index > oldIndex) {
-                var tweet = allUsers[username][index];
-                var $tweet = $('<div class="tweet"></div>');
-                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
-                $tweet.appendTo(timeline);
-                index -= 1;
-            }
-        });
+                displayTweets(newUser);
+                var userRefresh = setInterval(function() {
+                    displayTweets(newUser);
+                }, 5000);
+            });
+        }
     });
     </script>
 </body>
