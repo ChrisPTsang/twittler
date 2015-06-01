@@ -181,13 +181,14 @@
                 $("#user").text("@" + newUser + "'s")
                 clearInterval(refresh);
 
+                $("#returnButton").remove();
                 $returnButton = $("<button typeof='button' id='returnButton'>&#8592 Return to " + user + "'s Timeline</button>");
                 $returnButton.appendTo($("#user-timeline"));
 
 
                 $("#timeline").scrollTop(0);
                 displayTweets(newUser);
-                var userRefresh = setInterval(function() {
+                refresh = setInterval(function() {
                     displayTweets(newUser);
                 }, 5000);
             });
@@ -198,8 +199,10 @@
                 $("#user").text("@" + user + "'s")
                 $("#returnButton").remove();
                 displayTweets("main");
-                //clearInterval(userRefresh);
-                //refresh();
+                clearInterval(refresh);
+                refresh = setInterval(function() {
+                    displayTweets("main");
+                }, 5000);
             });
         }
     });
