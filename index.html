@@ -12,7 +12,7 @@
         font-weight: bold;
         text-shadow: 2px 2px #d8d9da;
         color: #4d93f5;
-        position: fixed;
+        position: absolute;
         top: 50px;
         left: 150px;
     }
@@ -37,6 +37,28 @@
         left: 20px;
         top: 100px;
         bottom: 0;
+        z-index: -1;
+    }
+    
+    #timeline {
+        position: absolute;
+        overflow-y: scroll;
+        margin: 0 400px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 90%;
+        border: 1px solid #e9eaec;
+        border-radius: 10px;
+        min-width: 400px;
+        z-index: -1;
+    }
+    
+    #writeButton {
+      position: absolute;
+        top: 150px;
+        left: 190px;
     }
     
     .tweet {
@@ -57,21 +79,7 @@
         color: #606366;
     }
     
-    #timeline {
-        position: absolute;
-        overflow-y: scroll;
-        margin: 0 400px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 90%;
-        border: 1px solid #e9eaec;
-        border-radius: 10px;
-        min-width: 400px;
-    }
-    
-    #returnButton {
+    .button {
         box-shadow: inset 0px 1px 0px 0px #ffffff;
         background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
         background-color: #ffffff;
@@ -86,16 +94,21 @@
         right: 0;
     }
     
-    #returnButton:hover {
+    .button:hover {
         background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
         background-color: #f6f6f6;
     }
     
-    #returnButton:focus {
+    .button:focus {
         outline: 0;
         box-shadow: none;
     }
-    
+
+    .button:active {
+        position: absolute;
+        top: 1px;
+    }
+
     ::-webkit-scrollbar {
         width: 5px;
     }
@@ -104,12 +117,14 @@
         border-radius: 20px;
         background: rgba(0, 0, 0, 0.1);
     }
+
     </style>
 </head>
 
 <body>
     <div id="logo">twittler</div>
     <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
+    <button typeof='button' class='button' id='writeButton'>New Tweet &#x270e</button>
     <div id="container">
         <div id="timeline"></div>
     </div>
@@ -182,7 +197,7 @@
                 clearInterval(refresh);
 
                 $("#returnButton").remove();
-                $returnButton = $("<button typeof='button' id='returnButton'>&#8592 Return to " + user + "'s Timeline</button>");
+                $returnButton = $("<button typeof='button' class='button' id='returnButton'>&#9667 Return to " + user + "'s Timeline</button>");
                 $returnButton.appendTo($("#user-timeline"));
 
 
@@ -198,6 +213,7 @@
             $(document).on("click", "#returnButton", function() {
                 $("#user").text("@" + user + "'s")
                 $("#returnButton").remove();
+                $("#timeline").scrollTop(0);
                 displayTweets("main");
                 clearInterval(refresh);
                 refresh = setInterval(function() {
