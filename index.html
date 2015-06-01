@@ -4,6 +4,7 @@
 <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="moment.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Poiret+One|Lobster|Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
     <style>
     #logo {
@@ -19,8 +20,8 @@
     #user-timeline {
         font: 1em 'Open Sans', sans-serif;
         font-weight: bold;
-        position: fixed;
         color: #4d93f5;
+        position: fixed;
         top: 50px;
         left: 420px;
         right: 420px;
@@ -34,9 +35,8 @@
         position: fixed;
         right: 20px;
         left: 20px;
-        top: 50px;
-        bottom: 10%;
-        padding: 5px;
+        top: 100px;
+        bottom: 0;
     }
     
     .tweet {
@@ -61,7 +61,7 @@
         position: absolute;
         overflow-y: scroll;
         margin: 0 400px;
-        top: 55px;
+        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
@@ -69,6 +69,31 @@
         border: 1px solid #e9eaec;
         border-radius: 10px;
         min-width: 400px;
+    }
+    
+    #returnButton {
+        box-shadow: inset 0px 1px 0px 0px #ffffff;
+        background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+        background-color: #ffffff;
+        border-radius: 6px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+        color: #666666;
+        font: 0.8em 'Open Sans', sans-serif;
+        padding: 5px;
+        text-shadow: 0px 1px 0px #ffffff;
+        position: absolute;
+        right: 0;
+    }
+    
+    #returnButton:hover {
+        background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+        background-color: #f6f6f6;
+    }
+    
+    #returnButton:focus {
+        outline: 0;
+        box-shadow: none;
     }
     
     ::-webkit-scrollbar {
@@ -105,15 +130,14 @@
         var timeline = $('#timeline');
         //$body.html('');
 
-        var currentIndex = 0;
-
         displayTweets("main"); //display initial set of generated tweets
         var refresh = setInterval(function() {
             displayTweets("main");
         }, 5000); //display new tweets every 5 seconds
 
-        hover("#user", "#2efa72", "#4d93f5");
-        
+        hover(".user", "#4d93f5", "black");
+        userClick();
+        mainClick();
 
         function displayTweets(username) {
             var index, stream, userStream;
@@ -127,47 +151,55 @@
                 stream = userStream[username];
             }
 
-            var lastIndex = index;
-
-            while (index > currentIndex) {
+            $('.tweet').remove();
+            while (index >= 0) {
                 var tweet = stream[index];
                 var $tweet = $('<div class="tweet"></div>');
-                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + tweet.created_at + '</span>');
+                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + moment(tweet.created_at).fromNow() + '</span>');
                 $tweet.appendTo(timeline);
                 index -= 1;
             }
-            currentIndex = lastIndex;
-            hover(".user", "#4d93f5", "black");
-            userclick();
-            
         }
 
         function hover(selection, color1, color2) {
-            if (color2 === undefined) {
-                color2 = "black";
-            }
-
-            $(selection).hover(function() {
-                $(this).css("color", color1);
-                $(this).css("cursor", "pointer");
-            }, function() {
-                $(this).css("color", color2);
-                $(this).css('cursor', 'auto');
-            });
+            $(document).on({
+                mouseenter: function() {
+                    $(this).css("color", color1);
+                    $(this).css("cursor", "pointer");
+                },
+                mouseleave: function() {
+                    $(this).css("color", color2);
+                    $(this).css('cursor', 'auto');
+                }
+            }, selection);
         }
 
-        function userclick() {
-            $('.user').click(function() {
+        function userClick() {
+            $(document).on("click", ".user", function() {
                 var newUser = $(this).text();
                 newUser = newUser.slice(1, -1);
+                $("#user").text("@" + newUser + "'s")
                 clearInterval(refresh);
-                $('.tweet').remove();
-                currentIndex = 0;
 
+                $returnButton = $("<button typeof='button' id='returnButton'>&#8592 Return to " + user + "'s Timeline</button>");
+                $returnButton.appendTo($("#user-timeline"));
+
+
+                $("#timeline").scrollTop(0);
                 displayTweets(newUser);
                 var userRefresh = setInterval(function() {
                     displayTweets(newUser);
                 }, 5000);
+            });
+        }
+
+        function mainClick() {
+            $(document).on("click", "#returnButton", function() {
+                $("#user").text("@" + user + "'s")
+                $("#returnButton").remove();
+                displayTweets("main");
+                //clearInterval(userRefresh);
+                //refresh();
             });
         }
     });
