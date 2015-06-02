@@ -25,7 +25,7 @@
     float: left;
   }
   
-  #user-timeline {
+  #header {
     font: 1em 'Open Sans', sans-serif;
     font-weight: bold;
     color: #4d93f5;
@@ -34,10 +34,18 @@
     left: 420px;
     right: 420px;
     min-width: 400px;
-    //background: linear-gradient(to bottom, #d1eaff , #fbfdfd);
     padding: 5px;
   }
   
+  #signedin {
+    font: 1em 'Open Sans', sans-serif;
+    font-weight: bold;
+    color: #4d93f5;
+    position: absolute;
+    top: 150px;
+    left: 150px;
+  }
+
   #container {
     overflow: hidden;
     position: fixed;
@@ -65,7 +73,7 @@
   
   #writeButton {
     position: absolute;
-    top: 150px;
+    top: 200px;
     left: 190px;
   }
   
@@ -205,7 +213,8 @@
 
 <body>
   <div class="logo">twittler</div>
-  <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
+  <div id="header">Your Timeline</div>
+  <div id="signedin">signed in as: <span id="username"></span></div>
   <button typeof='button' class='button' id='writeButton'>New Tweet &#x270e</button>
   <div id="container">
     <div id="timeline"></div>
@@ -255,7 +264,9 @@
     }, 5000); //display new tweets every 5 seconds
 
     hover(".user", "#4d93f5", "black");
-    userClick();
+    hover("#username", "#76febf", "#4d93f5");
+    userClick(".user", -1);
+    userClick("#username");
     mainClick();
 
     $(document).on("click", "#writeButton", function() {
@@ -273,7 +284,7 @@
         streams.users[user] = [];
         visitor = user;
         $("#logindiv").css("display", "none");
-        $("#user").text("@" + user + "'s");
+        $("#username").text("@" + user);
       });
     }
 
@@ -303,7 +314,8 @@
       $(document).one("click", "#send", function() {
         var message = $("#message").val();
         if (message === "") {
-          alert("Tweet is empty, please write a tweet.");
+          alert("Tweet is empty, please try again.");
+          sendTweet();
         } else {
           $("#tweetdiv").css("display", "none");
           $("#tweetposted").css("display", "block");
@@ -330,16 +342,17 @@
       }, selection);
     }
 
-    function userClick() {
-      $(document).on("click", ".user", function() {
+    function userClick(user, colon) {
+      $(document).on("click", user, function() {
         var newUser = $(this).text();
-        newUser = newUser.slice(1, -1);
-        $("#user").text("@" + newUser + "'s")
+        newUser = newUser.slice(1, colon);
+        $("#header").text("@" + newUser + "'s Profile");
+
         clearInterval(refresh);
 
         $("#returnButton").remove();
-        $returnButton = $("<button type='button' class='button' id='returnButton'>&#9667 Return to " + user + "'s Timeline</button>");
-        $returnButton.appendTo($("#user-timeline"));
+        $returnButton = $("<button type='button' class='button' id='returnButton'>&#9667 Return to Main Timeline</button>");
+        $returnButton.appendTo($("#header"));
 
 
         $("#timeline").scrollTop(0);
@@ -352,7 +365,7 @@
 
     function mainClick() {
       $(document).on("click", "#returnButton", function() {
-        $("#user").text("@" + user + "'s")
+        $("#header").text("Your Timeline");
         $("#returnButton").remove();
         $("#timeline").scrollTop(0);
         displayTweets("main");
@@ -364,7 +377,7 @@
     }
   });
   </script>
-  
+
 </body>
 
 </html>
