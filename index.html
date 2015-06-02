@@ -109,6 +109,17 @@
     margin-top: -255px;
   }
   
+  .alert {
+    color: #76febf;
+    font: 1em 'Open Sans', sans-serif;
+    display: none;
+    z-index: -1;
+    position: fixed;
+    top: 50px;
+    left: 600px;
+    padding: 5px;
+  }
+
   input {
     width: 77%;
     height: 20px;
@@ -231,26 +242,15 @@
       <br>
     </form>
   </div>
+
+  <!--fade alerts!-->
+  <div class="alert" id="tweetposted">Tweet posted<div>
+
   <script>
   $(document).ready(function() {
     //prompt for username to display on timeline 
     var user = "";
     login();
-
-    function login() {
-      $("#logindiv").css("display", "block");
-      $(document).on("click", "#login", function() {
-        user = $("#name").val();
-        if (user === "") {
-          user = "Guest";
-        }
-        $("#logindiv").css("display", "none");
-        $("#user").text("@" + user + "'s");
-      });
-    }
-
-    streams.users[user] = [];
-    visitor = user;
 
     var timeline = $('#timeline');
     //$body.html('');
@@ -268,6 +268,21 @@
       $("#tweetdiv").css("display", "block");
       sendTweet();
     });
+
+
+    function login() {
+      $("#logindiv").css("display", "block");
+      $(document).on("click", "#login", function() {
+        user = $("#name").val();
+        if (user === "") {
+          user = "Guest";
+        }
+        streams.users[user] = [];
+        visitor = user;
+        $("#logindiv").css("display", "none");
+        $("#user").text("@" + user + "'s");
+      });
+    }
 
     function displayTweets(username) {
       var index, stream, userStream;
@@ -298,6 +313,10 @@
           alert("Tweet is empty, please write a tweet.");
         } else {
           $("#tweetdiv").css("display", "none");
+          $("#tweetposted").css("display", "block");
+          $("#tweetposted").fadeOut(4000);
+          $("#message").val("");
+          writeTweet(message);
         }
       });
       $(document).on("click", "#cancel", function() {
