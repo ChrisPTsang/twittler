@@ -317,6 +317,7 @@
           alert("Tweet is empty, please try again.");
           sendTweet();
         } else {
+          $(document).off("click", "#cancel");
           $("#tweetdiv").css("display", "none");
           $("#tweetposted").css("display", "block");
           $("#tweetposted").fadeOut(4000);
@@ -324,8 +325,10 @@
           writeTweet(message);
         }
       });
-      $(document).on("click", "#cancel", function() {
+      $(document).one("click", "#cancel", function() {
         $("#tweetdiv").css("display", "none");
+        $("#message").val("");
+        $(document).off("click", "#send");
       });
     }
 
