@@ -2,227 +2,357 @@
 <html>
 
 <head>
-    <script src="jquery.js"></script>
-    <script src="data_generator.js"></script>
-    <script src="moment.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Poiret+One|Lobster|Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-    <style>
-    #logo {
-        font: 4em 'Lobster', 'Poiret One', cursive, Arial, sans-serif;
-        font-weight: bold;
-        text-shadow: 2px 2px #d8d9da;
-        color: #4d93f5;
-        position: absolute;
-        top: 50px;
-        left: 150px;
-    }
-    
-    #user-timeline {
-        font: 1em 'Open Sans', sans-serif;
-        font-weight: bold;
-        color: #4d93f5;
-        position: fixed;
-        top: 50px;
-        left: 420px;
-        right: 420px;
-        min-width: 400px;
-        //background: linear-gradient(to bottom, #d1eaff , #fbfdfd);
-        padding: 5px;
-    }
-    
-    #container {
-        overflow: hidden;
-        position: fixed;
-        right: 20px;
-        left: 20px;
-        top: 100px;
-        bottom: 0;
-        z-index: -1;
-    }
-    
-    #timeline {
-        position: absolute;
-        overflow-y: scroll;
-        margin: 0 400px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 90%;
-        border: 1px solid #e9eaec;
-        border-radius: 10px;
-        min-width: 400px;
-        z-index: -1;
-    }
-    
-    #writeButton {
-      position: absolute;
-        top: 150px;
-        left: 190px;
-    }
-    
-    .tweet {
-        font: .9em 'Open Sans', Helvetica, Arial, sans-serif;
-        border: 1px outset #dcdde0;
-        border-radius: 8px;
-        background-color: #ebf6ff;
-        padding: 10px;
-        margin: 15px;
-    }
-    
-    .user {
-        font-weight: bold;
-    }
-    
-    .date {
-        font-size: 0.5em;
-        color: #606366;
-    }
-    
-    .button {
-        box-shadow: inset 0px 1px 0px 0px #ffffff;
-        background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-        background-color: #ffffff;
-        border-radius: 6px;
-        border: 1px solid #dcdcdc;
-        cursor: pointer;
-        color: #666666;
-        font: 0.8em 'Open Sans', sans-serif;
-        padding: 5px;
-        text-shadow: 0px 1px 0px #ffffff;
-        position: absolute;
-        right: 0;
-    }
-    
-    .button:hover {
-        background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
-        background-color: #f6f6f6;
-    }
-    
-    .button:focus {
-        outline: 0;
-        box-shadow: none;
-    }
-
-    .button:active {
-        position: absolute;
-        top: 1px;
-    }
-
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        border-radius: 20px;
-        background: rgba(0, 0, 0, 0.1);
-    }
-
-    </style>
+  <script src="jquery.js"></script>
+  <script src="data_generator.js"></script>
+  <script src="moment.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Poiret+One|Lobster|Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+  <style>
+  .logo {
+    font: 4em 'Lobster', 'Poiret One', cursive, Arial, sans-serif;
+    font-weight: bold;
+    text-shadow: 2px 2px #d8d9da;
+    color: #4d93f5;
+    position: absolute;
+    top: 50px;
+    left: 150px;
+  }
+  
+  #loginlogo {
+    font: 2em;
+    position: static;
+    top: 0;
+    left: 0;
+    float: left;
+  }
+  
+  #user-timeline {
+    font: 1em 'Open Sans', sans-serif;
+    font-weight: bold;
+    color: #4d93f5;
+    position: fixed;
+    top: 50px;
+    left: 420px;
+    right: 420px;
+    min-width: 400px;
+    //background: linear-gradient(to bottom, #d1eaff , #fbfdfd);
+    padding: 5px;
+  }
+  
+  #container {
+    overflow: hidden;
+    position: fixed;
+    right: 20px;
+    left: 20px;
+    top: 100px;
+    bottom: 0;
+    z-index: -1;
+  }
+  
+  #timeline {
+    position: absolute;
+    overflow-y: scroll;
+    margin: 0 400px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 90%;
+    border: 1px solid #e9eaec;
+    border-radius: 10px;
+    min-width: 400px;
+    z-index: -1;
+  }
+  
+  #writeButton {
+    position: absolute;
+    top: 150px;
+    left: 190px;
+  }
+  
+  #send,
+  #cancel,
+  #login {
+    margin: 5px;
+    width: 50px;
+    position: static;
+  }
+  
+  #tweetdiv,
+  #logindiv {
+    opacity: 0.9;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: none;
+  }
+  
+  #logindiv {
+    opacity: 1;
+  }
+  
+  #tweetform,
+  #loginform {
+    opacity: 0.9;
+    width: 350px;
+    margin: 0px;
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    border: 1px solid #e9eaec;
+    border-radius: 8px;
+    left: 50%;
+    top: 50%;
+    margin-left: -210px;
+    margin-top: -255px;
+  }
+  
+  input {
+    width: 77%;
+    height: 20px;
+    margin-top: 5px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 2px;
+    z-index: 1;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 80px;
+    margin-top: 5px;
+    border-radius: 3px;
+    padding: 5px;
+    resize: none;
+  }
+  
+  .form {
+    border-radius: 2px;
+    padding: 20px 30px;
+    box-shadow: 0 0 15px;
+    font-size: 14px;
+    font-weight: bold;
+    width: 350px;
+    margin: 20px 250px 0 35px;
+  }
+  
+  .tweet {
+    font: .9em 'Open Sans', Helvetica, Arial, sans-serif;
+    border: 1px outset #dcdde0;
+    border-radius: 8px;
+    background-color: #ebf6ff;
+    padding: 10px;
+    margin: 15px;
+  }
+  
+  .user {
+    font-weight: bold;
+  }
+  
+  .date {
+    font-size: 0.5em;
+    color: #606366;
+  }
+  
+  .button {
+    box-shadow: inset 0px 1px 0px 0px #ffffff;
+    background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+    background-color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
+    color: #666666;
+    font: 0.8em 'Open Sans', sans-serif;
+    padding: 5px;
+    text-shadow: 0px 1px 0px #ffffff;
+    position: absolute;
+    right: 0;
+  }
+  
+  .button:hover {
+    background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+    background-color: #f6f6f6;
+  }
+  
+  .button:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+  
+  .button:active {
+    position: absolute;
+    top: 1px;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  </style>
 </head>
 
 <body>
-    <div id="logo">twittler</div>
-    <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
-    <button typeof='button' class='button' id='writeButton'>New Tweet &#x270e</button>
-    <div id="container">
-        <div id="timeline"></div>
-    </div>
-    <script>
-    $(document).ready(function() {
+  <div class="logo">twittler</div>
+  <div id="user-timeline"><span id="user">Guest's</span> Timeline</div>
+  <button typeof='button' class='button' id='writeButton'>New Tweet &#x270e</button>
+  <div id="container">
+    <div id="timeline"></div>
+  </div>
+  <!--login form!-->
+  <div id="logindiv">
+    <form class="form" action="#" id="loginform">
+      <div class="logo" id="loginlogo">twittler</div>
+      <br>
+      <br>
+      <br>
+      <h4><font color="#4d93f5">Please enter username or login as Guest</font></h4>
+      <label>Username: </label>
+      <input type="text" id="name" />
+      <br>
+      <button type="button" class="button" id="login">Login</button>
+      <br>
+    </form>
+  </div>
+  <!--tweet form!-->
+  <div id="tweetdiv">
+    <form class="form" action="#" id="tweetform">
+      <h4><font color="#4d93f5">Compose new Tweet</font></h4>
+      <br>
+      <textarea id="message" placeholder="Message......."></textarea>
+      <br>
+      <button type="button" class="button" id="send">Tweet</button>
+      <button type="button" class="button" id="cancel">Cancel</button>
+      <br>
+    </form>
+  </div>
+  <script>
+  $(document).ready(function() {
+    //prompt for username to display on timeline 
+    var user = "";
+    login();
 
-        //prompt for username to display on timeline 
-        var user = prompt("Please enter your username", "Guest");
-        if (user != null) {
-            $("#user").text("@" + user + "'s");
+    function login() {
+      $("#logindiv").css("display", "block");
+      $(document).on("click", "#login", function() {
+        user = $("#name").val();
+        if (user === "") {
+          user = "Guest";
         }
+        $("#logindiv").css("display", "none");
+        $("#user").text("@" + user + "'s");
+      });
+    }
 
-        //$("input").keyup(function() {
-        //  var value = $(this).val();
-        //  $("#user").text(value);
-        //}).keyup();
+    streams.users[user] = [];
+    visitor = user;
 
-        var timeline = $('#timeline');
-        //$body.html('');
+    var timeline = $('#timeline');
+    //$body.html('');
 
-        displayTweets("main"); //display initial set of generated tweets
-        var refresh = setInterval(function() {
-            displayTweets("main");
-        }, 5000); //display new tweets every 5 seconds
+    displayTweets("main"); //display initial set of generated tweets
+    var refresh = setInterval(function() {
+      displayTweets("main");
+    }, 5000); //display new tweets every 5 seconds
 
-        hover(".user", "#4d93f5", "black");
-        userClick();
-        mainClick();
+    hover(".user", "#4d93f5", "black");
+    userClick();
+    mainClick();
 
-        function displayTweets(username) {
-            var index, stream, userStream;
-
-            if (username === "main") {
-                index = streams.home.length - 1;
-                stream = streams.home;
-            } else {
-                userStream = streams.users
-                index = userStream[username].length - 1;
-                stream = userStream[username];
-            }
-
-            $('.tweet').remove();
-            while (index >= 0) {
-                var tweet = stream[index];
-                var $tweet = $('<div class="tweet"></div>');
-                $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + moment(tweet.created_at).fromNow() + '</span>');
-                $tweet.appendTo(timeline);
-                index -= 1;
-            }
-        }
-
-        function hover(selection, color1, color2) {
-            $(document).on({
-                mouseenter: function() {
-                    $(this).css("color", color1);
-                    $(this).css("cursor", "pointer");
-                },
-                mouseleave: function() {
-                    $(this).css("color", color2);
-                    $(this).css('cursor', 'auto');
-                }
-            }, selection);
-        }
-
-        function userClick() {
-            $(document).on("click", ".user", function() {
-                var newUser = $(this).text();
-                newUser = newUser.slice(1, -1);
-                $("#user").text("@" + newUser + "'s")
-                clearInterval(refresh);
-
-                $("#returnButton").remove();
-                $returnButton = $("<button typeof='button' class='button' id='returnButton'>&#9667 Return to " + user + "'s Timeline</button>");
-                $returnButton.appendTo($("#user-timeline"));
-
-
-                $("#timeline").scrollTop(0);
-                displayTweets(newUser);
-                refresh = setInterval(function() {
-                    displayTweets(newUser);
-                }, 5000);
-            });
-        }
-
-        function mainClick() {
-            $(document).on("click", "#returnButton", function() {
-                $("#user").text("@" + user + "'s")
-                $("#returnButton").remove();
-                $("#timeline").scrollTop(0);
-                displayTweets("main");
-                clearInterval(refresh);
-                refresh = setInterval(function() {
-                    displayTweets("main");
-                }, 5000);
-            });
-        }
+    $(document).on("click", "#writeButton", function() {
+      $("#tweetdiv").css("display", "block");
+      sendTweet();
     });
-    </script>
+
+    function displayTweets(username) {
+      var index, stream, userStream;
+
+      if (username === "main") {
+        index = streams.home.length - 1;
+        stream = streams.home;
+      } else {
+        userStream = streams.users
+        index = userStream[username].length - 1;
+        stream = userStream[username];
+      }
+
+      $('.tweet').remove();
+      while (index >= 0) {
+        var tweet = stream[index];
+        var $tweet = $('<div class="tweet"></div>');
+        $tweet.html('<span class="user">@' + tweet.user + ':</span><br><br>' + tweet.message + '<br><br><span class="date">' + moment(tweet.created_at).fromNow() + '</span>');
+        $tweet.appendTo(timeline);
+        index -= 1;
+      }
+    }
+
+    function sendTweet() {
+      $(document).on("click", "#send", function() {
+        var message = $("#message").val();
+        if (message === "") {
+          alert("Tweet is empty, please write a tweet.");
+        } else {
+          $("#tweetdiv").css("display", "none");
+        }
+      });
+      $(document).on("click", "#cancel", function() {
+        $("#tweetdiv").css("display", "none");
+      });
+    }
+
+    function hover(selection, color1, color2) {
+      $(document).on({
+        mouseenter: function() {
+          $(this).css("color", color1);
+          $(this).css("cursor", "pointer");
+        },
+        mouseleave: function() {
+          $(this).css("color", color2);
+          $(this).css('cursor', 'auto');
+        }
+      }, selection);
+    }
+
+    function userClick() {
+      $(document).on("click", ".user", function() {
+        var newUser = $(this).text();
+        newUser = newUser.slice(1, -1);
+        $("#user").text("@" + newUser + "'s")
+        clearInterval(refresh);
+
+        $("#returnButton").remove();
+        $returnButton = $("<button type='button' class='button' id='returnButton'>&#9667 Return to " + user + "'s Timeline</button>");
+        $returnButton.appendTo($("#user-timeline"));
+
+
+        $("#timeline").scrollTop(0);
+        displayTweets(newUser);
+        refresh = setInterval(function() {
+          displayTweets(newUser);
+        }, 5000);
+      });
+    }
+
+    function mainClick() {
+      $(document).on("click", "#returnButton", function() {
+        $("#user").text("@" + user + "'s")
+        $("#returnButton").remove();
+        $("#timeline").scrollTop(0);
+        displayTweets("main");
+        clearInterval(refresh);
+        refresh = setInterval(function() {
+          displayTweets("main");
+        }, 5000);
+      });
+    }
+
+  });
+  </script>
 </body>
 
 </html>
